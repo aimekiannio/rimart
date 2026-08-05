@@ -1,0 +1,67 @@
+"use client";
+
+import { use } from "react";
+import { products } from "@/features/products/data";
+import { useCartStore } from "@/features/cart/cart-store";
+import { Button } from "@/components/ui/button";
+
+export default function ProductDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = use(params);
+
+  const addToCart = useCartStore(
+    (state) => state.addToCart
+  );
+
+  const product = products.find(
+    (item) => item.id === Number(id)
+  );
+
+  if (!product) {
+    return (
+      <main className="container mx-auto px-4 py-10">
+        <h1 className="text-2xl font-bold">
+          Product not found
+        </h1>
+      </main>
+    );
+  }
+
+  return (
+    <main className="container mx-auto px-4 py-10">
+      <h1 className="text-4xl font-bold">{product.name}</h1>
+
+      <p className="mt-4 text-2xl font-semibold">
+        ₹{product.price}
+      </p>
+
+      <div className="mt-6 space-y-2">
+        <p>Category: {product.category}</p>
+        <p>Seller: {product.seller}</p>
+        <p>Location: {product.location}</p>
+        <p>Stock: {product.stock}</p>
+      </div>
+
+      <div className="mt-8 flex gap-4">
+        <Button
+          onClick={() =>
+            addToCart({
+              id: product.id,
+              name: product.name,
+              price: product.price,
+            })
+          }
+        >
+          Add to Cart
+        </Button>
+
+        <Button variant="outline">
+          Contact Seller
+        </Button>
+      </div>
+    </main>
+  );
+}
