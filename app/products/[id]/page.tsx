@@ -1,34 +1,33 @@
-"use client";
-
-import { use } from "react";
-import { products } from "@/features/products/data";
-import { useCartStore } from "@/features/cart/cart-store";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { MainLayout } from "@/components/layout/main-layout";
+import { ProductDetailActions } from "@/features/products/product-detail-actions";
+import { products } from "@/features/products/data";
 
-export default function ProductDetailPage({
+export function generateStaticParams() {
+  return products.map((product) => ({ id: String(product.id) }));
+}
+
+export default async function ProductDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = use(params);
-
-  const addToCart = useCartStore((state) => state.addToCart);
-  const product = products.find(
-    (item) => item.id === Number(id)
-  );
-
-  if (!product) {
-    return (
-      <MainLayout><main className="cart-page"><h1>Piece not found</h1></main></MainLayout>
-    );
-  }
+  const { id } = await params;
+  const product = products.find((item) => item.id === Number(id));
 
   return (
-    <MainLayout><main className="cart-page">
-      <p className="eyebrow">{product.category}</p><h1>{product.name}</h1>
-      <p className="mt-5 text-2xl">₹{product.price.toLocaleString("en-IN")}</p>
-      <div className="mt-8"><Button onClick={() => addToCart({ id: product.id, name: product.name, price: product.price })}>Add to Cart</Button></div>
-    </main></MainLayout>
+    <MainLayout>
+      <main className="cart-page">
+        {product ? <>
+          <p className="eyebrow">{product.category}</p>
+          <h1>{product.name}</h1>
+          <p className="mt-5 text-2xl">₹{product.price.toLocaleString("en-IN")}</p>
+          <ProductDetailActions product={product} />
+        </> : <>
+          <h1>Piece not found</h1>
+          <Link href="/" className="button button-dark mt-5">Back to store</Link>
+        </>}
+      </main>
+    </MainLayout>
   );
 }

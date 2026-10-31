@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MainLayout } from "@/components/layout/main-layout";
 import { ProductList } from "@/features/products/product-list";
+import { assetPath } from "@/lib/asset-path";
 
 export default function HomePage() {
   return (
@@ -17,7 +18,7 @@ export default function HomePage() {
             <Link href="#shop" className="button button-dark">Explore store <span aria-hidden="true">→</span></Link>
           </div>
           <div className="hero-brand">
-            <Image src="/galactic-logo.png" alt="GALACTIC" width={794} height={410} priority className="hero-logo" />
+            <Image src={assetPath("galactic-logo.png")} alt="GALACTIC" width={794} height={410} priority className="hero-logo" />
             <p>FASHION <span>/</span> ACCESSORIES <span>/</span> ELECTRONICS</p>
           </div>
           <div className="hero-caption">GALACTIC // <br />SHOP SMARTER.<i /></div>

@@ -4,13 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { Search, ShoppingBag, UserRound } from "lucide-react";
 import { useCartStore } from "@/features/cart/cart-store";
+import { assetPath } from "@/lib/asset-path";
 
 export function Navigation() {
   const count = useCartStore((state) => state.cart.reduce((sum, item) => sum + item.quantity, 0));
   return (
     <header className="site-header">
       <Link className="brand-link" href="/" aria-label="GALACTIC home">
-        <Image src="/galactic-logo.png" alt="GALACTIC" width={794} height={410} priority className="brand-logo" />
+        <Image src={assetPath("galactic-logo.png")} alt="GALACTIC" width={794} height={410} priority className="brand-logo" />
       </Link>
       <nav className="header-nav" aria-label="Main navigation">
         <Link className="nav-home" href="/">Home</Link>
