@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Headphones, Shirt, Sparkles } from "lucide-react";
 import { products } from "./data";
+import type { Product } from "./data";
 import { ProductCard } from "./product-card";
 
 const categories = [
@@ -13,12 +14,21 @@ const categories = [
 ] as const;
 
 export function ProductList() {
+  const [catalog, setCatalog] = useState<Product[]>(products);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
-  const filteredProducts = useMemo(() => products.filter((product) => {
+  useEffect(() => {
+    let active = true;
+    fetch("/api/products", { cache: "no-store" })
+      .then((response) => response.ok ? response.json() as Promise<Product[]> : null)
+      .then((items) => { if (active && items) setCatalog(items); })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, []);
+  const filteredProducts = useMemo(() => catalog.filter((product) => {
     const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
     return matchesCategory && product.name.toLowerCase().includes(search.toLowerCase().trim());
-  }), [search, selectedCategory]);
+  }), [catalog, search, selectedCategory]);
 
   return (
     <>

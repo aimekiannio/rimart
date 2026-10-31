@@ -1,10 +1,12 @@
 export type Product = {
-  id: number;
+  id: number | string;
   name: string;
   price: number;
   category: "Clothing" | "Accessories" | "Electronics";
   image: string;
   badge: string;
+  stock?: number;
+  description?: string;
 };
 
 export const products: Product[] = [

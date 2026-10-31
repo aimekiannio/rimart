@@ -1,0 +1,6 @@
+NEXTJS_ENV=development
+SUPABASE_URL=https://YOUR-PROJECT.supabase.co
+SUPABASE_SECRET_KEY=YOUR-SUPABASE-SECRET-KEY
+GALACTIC_ADMIN_EMAIL=you@example.com
+GALACTIC_ADMIN_PASSWORD=use-a-long-unique-password
+GALACTIC_SESSION_SECRET=replace-with-a-long-random-secret

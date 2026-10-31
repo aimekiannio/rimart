@@ -4,7 +4,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export type CartItem = {
-  id: number;
+  id: number | string;
   name: string;
   price: number;
   quantity: number;
@@ -13,9 +13,10 @@ export type CartItem = {
 type CartStore = {
   cart: CartItem[];
   addToCart: (product: Omit<CartItem, "quantity">) => void;
-  removeFromCart: (id: number) => void;
-  increaseQuantity: (id: number) => void;
-  decreaseQuantity: (id: number) => void;
+  removeFromCart: (id: number | string) => void;
+  increaseQuantity: (id: number | string) => void;
+  decreaseQuantity: (id: number | string) => void;
+  clearCart: () => void;
 };
 
 export const useCartStore = create<CartStore>()(
@@ -35,7 +36,7 @@ export const useCartStore = create<CartStore>()(
                 item.id === product.id
                   ? {
                       ...item,
-                      quantity: item.quantity + 1,
+                      quantity: Math.min(item.quantity + 1, 20),
                     }
                   : item
               ),
@@ -83,6 +84,8 @@ export const useCartStore = create<CartStore>()(
               : item
           ),
         })),
+
+      clearCart: () => set({ cart: [] }),
     }),
     {
       name: "galactic-cart",
