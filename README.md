@@ -14,6 +14,6 @@ Edit the catalog in `features/products/data.ts`. The storefront layout and styli
 
 ## Publish on GitHub Pages
 
-The `main` branch builds and deploys the static site through GitHub Actions. In the repository, open **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**. The next successful workflow run publishes the site at `https://aimekiannio.github.io/rimart/`.
+The `main` branch builds and deploys the static site through GitHub Actions. In the repository, open **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**. The workflow uses the repository’s current name to set the project path automatically. After a successful run, find the published URL in the **github-pages** environment or on **Settings → Pages**.
 
 The Pages version is a static storefront. Product browsing and the cart run in the visitor’s browser; server-backed checkout and accounts are not included.
