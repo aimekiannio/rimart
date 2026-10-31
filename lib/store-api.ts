@@ -99,6 +99,27 @@ export type StoreOrder = {
   order_items: { product_name: string; unit_price: number; quantity: number }[];
 };
 
+export type StoreAnalytics = {
+  salesToday: number;
+  sales30Days: number;
+  ordersToday: number;
+  orders30Days: number;
+  lifetimeSales: number;
+  lifetimeOrders: number;
+  averageOrderValue: number;
+  ordersToFulfill: number;
+  lowStockProducts: number;
+  totalProducts: number;
+  dailySales: { date: string; sales: number; orders: number }[];
+};
+
+export async function getStoreAnalytics(): Promise<StoreAnalytics> {
+  return databaseRequest<StoreAnalytics>("rpc/get_store_analytics", {
+    method: "POST",
+    body: "{}",
+  });
+}
+
 export async function listOrders(): Promise<StoreOrder[]> {
   return databaseRequest<StoreOrder[]>(
     "orders?select=id,order_number,customer_name,phone,email,address,city,state,pincode,total,status,created_at,order_items(product_name,unit_price,quantity)&order=created_at.desc&limit=100",

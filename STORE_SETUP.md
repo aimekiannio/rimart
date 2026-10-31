@@ -6,7 +6,7 @@ This guide connects the code to a real database and the full-stack host. The cur
 
 1. Create a Supabase account and a project named **GALACTIC**.
 2. In the project, open **SQL Editor** → **New query**.
-3. Open `supabase/schema.sql` in this repository, copy the whole file into the query, and click **Run**. This creates the tables, adds the four sample products, and installs the protected cash-order transaction.
+3. Open `supabase/schema.sql` in this repository, copy the whole file into the query, and click **Run**. This creates the tables, adds the four sample products, and installs the protected checkout, order-status, and dashboard analytics functions. Run the latest full file again if you already used an older version.
 4. Open **Project Settings → API Keys**. Copy the **Project URL** and the new **Secret key**. The secret key begins with `sb_secret_`. Keep it private; it grants full database access.
 
 ## 2. Try the manager on this computer
@@ -15,7 +15,7 @@ This guide connects the code to a real database and the full-stack host. The cur
 2. Fill in `SUPABASE_URL` and `SUPABASE_SECRET_KEY` from Supabase.
 3. Choose an owner email, a long unique password, and a random secret of at least 32 characters for `GALACTIC_SESSION_SECRET`.
 4. In Terminal, open the project folder and run `npm run dev`.
-5. Visit `http://localhost:3000/admin` to sign in. Add or update products there. Place a test order from the storefront; it should appear under **Orders**.
+5. Visit `http://localhost:3000/admin` to sign in. The **Overview** shows sales totals, order counts, orders to fulfill, low-stock products, and a 7-day sales chart. Add or update products there. Place a test order from the storefront; it should appear under **Orders**.
 
 Never send the Supabase secret key or owner password in chat or commit `.env.local` to Git. The project ignores that file.
 

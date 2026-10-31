@@ -152,3 +152,75 @@ values
 on conflict (id) do nothing;
 
 select setval(pg_get_serial_sequence('public.products', 'id'), greatest(coalesce(max(id), 1), 1)) from public.products;
+
+-- Summary metrics for the protected owner dashboard. Sales exclude cancelled orders.
+create or replace function public.get_store_analytics()
+returns jsonb
+language sql
+stable
+security definer
+set search_path = public, pg_temp
+as $$
+  with daily as (
+    select
+      days.day::date as day,
+      coalesce(sum(o.total), 0)::bigint as sales,
+      count(o.id)::bigint as order_count
+    from generate_series(
+      (timezone('Asia/Kolkata', now())::date - 6)::timestamp,
+      timezone('Asia/Kolkata', now())::date::timestamp,
+      interval '1 day'
+    ) as days(day)
+    left join public.orders o
+      on timezone('Asia/Kolkata', o.created_at)::date = days.day::date
+      and o.status <> 'cancelled'
+    group by days.day
+  ),
+  order_metrics as (
+    select
+      coalesce(sum(o.total) filter (where o.status <> 'cancelled'), 0)::bigint as lifetime_sales,
+      count(*) filter (where o.status <> 'cancelled')::bigint as lifetime_orders,
+      coalesce(sum(o.total) filter (
+        where o.status <> 'cancelled'
+          and timezone('Asia/Kolkata', o.created_at)::date = timezone('Asia/Kolkata', now())::date
+      ), 0)::bigint as sales_today,
+      count(*) filter (
+        where o.status <> 'cancelled'
+          and timezone('Asia/Kolkata', o.created_at)::date = timezone('Asia/Kolkata', now())::date
+      )::bigint as orders_today,
+      coalesce(sum(o.total) filter (
+        where o.status <> 'cancelled' and o.created_at >= now() - interval '30 days'
+      ), 0)::bigint as sales_30_days,
+      count(*) filter (
+        where o.status <> 'cancelled' and o.created_at >= now() - interval '30 days'
+      )::bigint as orders_30_days,
+      count(*) filter (where o.status in ('new', 'confirmed'))::bigint as orders_to_fulfill
+    from public.orders o
+  ),
+  product_metrics as (
+    select
+      count(*) filter (where p.published)::bigint as total_products,
+      count(*) filter (where p.published and p.stock <= 5)::bigint as low_stock_products
+    from public.products p
+  )
+  select jsonb_build_object(
+    'salesToday', om.sales_today,
+    'sales30Days', om.sales_30_days,
+    'ordersToday', om.orders_today,
+    'orders30Days', om.orders_30_days,
+    'lifetimeSales', om.lifetime_sales,
+    'lifetimeOrders', om.lifetime_orders,
+    'averageOrderValue', case when om.lifetime_orders = 0 then 0 else round(om.lifetime_sales::numeric / om.lifetime_orders)::bigint end,
+    'ordersToFulfill', om.orders_to_fulfill,
+    'lowStockProducts', pm.low_stock_products,
+    'totalProducts', pm.total_products,
+    'dailySales', coalesce((
+      select jsonb_agg(jsonb_build_object('date', daily.day, 'sales', daily.sales, 'orders', daily.order_count) order by daily.day)
+      from daily
+    ), '[]'::jsonb)
+  )
+  from order_metrics om cross join product_metrics pm;
+$$;
+
+revoke all on function public.get_store_analytics() from public, anon, authenticated;
+grant execute on function public.get_store_analytics() to service_role;
