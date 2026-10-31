@@ -1,46 +1,24 @@
-import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
+"use client";
 
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
-  seller: string;
-  location: string;
-  stock: string;
-};
+import Image from "next/image";
+import { useState } from "react";
+import { Plus, Check } from "lucide-react";
+import { useCartStore } from "@/features/cart/cart-store";
+import type { Product } from "./data";
 
 export function ProductCard({ product }: { product: Product }) {
+  const addToCart = useCartStore((state) => state.addToCart);
+  const [added, setAdded] = useState(false);
+  function add() {
+    addToCart({ id: product.id, name: product.name, price: product.price });
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 1200);
+  }
+
   return (
-    <Link href={`/products/${product.id}`}>
-      <Card className="transition hover:shadow-lg">
-        <CardContent className="p-6">
-          <h2 className="text-xl font-semibold">
-            {product.name}
-          </h2>
-
-          <p className="mt-2 text-lg font-medium">
-            ₹{product.price}
-          </p>
-
-          <p className="text-sm text-muted-foreground">
-            Category: {product.category}
-          </p>
-
-          <p className="text-sm text-muted-foreground">
-            Seller: {product.seller}
-          </p>
-
-          <p className="text-sm text-muted-foreground">
-            Location: {product.location}
-          </p>
-
-          <p className="mt-2 text-sm">
-            Stock: {product.stock}
-          </p>
-        </CardContent>
-      </Card>
-    </Link>
+    <article className="product-card">
+      <div className="product-visual"><Image src={product.image} alt={product.name} fill sizes="(max-width: 680px) 48vw, 25vw" className="product-image" /></div>
+      <div className="product-info"><div><h3 className="product-name">{product.name}</h3><p className="product-price">₹{product.price.toLocaleString("en-IN")}</p></div><button className="add-button" type="button" onClick={add} aria-label={`Add ${product.name} to cart`}>{added ? <Check size={19} /> : <Plus size={19} />}</button></div>
+    </article>
   );
 }

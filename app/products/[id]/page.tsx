@@ -4,6 +4,7 @@ import { use } from "react";
 import { products } from "@/features/products/data";
 import { useCartStore } from "@/features/cart/cart-store";
 import { Button } from "@/components/ui/button";
+import { MainLayout } from "@/components/layout/main-layout";
 
 export default function ProductDetailPage({
   params,
@@ -12,56 +13,22 @@ export default function ProductDetailPage({
 }) {
   const { id } = use(params);
 
-  const addToCart = useCartStore(
-    (state) => state.addToCart
-  );
-
+  const addToCart = useCartStore((state) => state.addToCart);
   const product = products.find(
     (item) => item.id === Number(id)
   );
 
   if (!product) {
     return (
-      <main className="container mx-auto px-4 py-10">
-        <h1 className="text-2xl font-bold">
-          Product not found
-        </h1>
-      </main>
+      <MainLayout><main className="cart-page"><h1>Piece not found</h1></main></MainLayout>
     );
   }
 
   return (
-    <main className="container mx-auto px-4 py-10">
-      <h1 className="text-4xl font-bold">{product.name}</h1>
-
-      <p className="mt-4 text-2xl font-semibold">
-        ₹{product.price}
-      </p>
-
-      <div className="mt-6 space-y-2">
-        <p>Category: {product.category}</p>
-        <p>Seller: {product.seller}</p>
-        <p>Location: {product.location}</p>
-        <p>Stock: {product.stock}</p>
-      </div>
-
-      <div className="mt-8 flex gap-4">
-        <Button
-          onClick={() =>
-            addToCart({
-              id: product.id,
-              name: product.name,
-              price: product.price,
-            })
-          }
-        >
-          Add to Cart
-        </Button>
-
-        <Button variant="outline">
-          Contact Seller
-        </Button>
-      </div>
-    </main>
+    <MainLayout><main className="cart-page">
+      <p className="eyebrow">{product.category}</p><h1>{product.name}</h1>
+      <p className="mt-5 text-2xl">₹{product.price.toLocaleString("en-IN")}</p>
+      <div className="mt-8"><Button onClick={() => addToCart({ id: product.id, name: product.name, price: product.price })}>Add to Cart</Button></div>
+    </main></MainLayout>
   );
 }

@@ -4,7 +4,7 @@ export default function RegisterPage() {
   return (
     <PlaceholderPage
       title="Register"
-      description="Create your RiMart account and start discovering local products."
+      description="Create your GALACTIC account and explore the collection."
     />
   );
 }

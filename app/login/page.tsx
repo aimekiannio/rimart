@@ -4,7 +4,7 @@ export default function LoginPage() {
   return (
     <PlaceholderPage
       title="Login"
-      description="Sign in to your RiMart account to shop from local sellers."
+      description="Sign in to your GALACTIC account to explore the collection."
     />
   );
 }

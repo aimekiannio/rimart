@@ -1,47 +1,31 @@
-import Link from "next/link";
+"use client";
 
-import { Container } from "@/components/layout/container";
-import { DesktopNav, MobileNav } from "@/components/layout/mobile-nav";
-import { Button } from "@/components/ui/button";
-import { authNavItems, sellerNavItem } from "@/constants/navigation";
-import { APP_NAME } from "@/constants/app";
+import Image from "next/image";
+import Link from "next/link";
+import { Search, ShoppingBag, UserRound } from "lucide-react";
+import { useCartStore } from "@/features/cart/cart-store";
 
 export function Navigation() {
+  const count = useCartStore((state) => state.cart.reduce((sum, item) => sum + item.quantity, 0));
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <Container>
-        <div className="flex h-16 items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <MobileNav />
-            <Link
-              href="/"
-              className="flex items-center gap-2 font-heading text-lg font-bold tracking-tight text-primary"
-            >
-              {APP_NAME}
-            </Link>
-            <DesktopNav />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="hidden sm:inline-flex"
-              render={<Link href={sellerNavItem.href}>{sellerNavItem.label}</Link>}
-            />
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hidden sm:inline-flex"
-              render={<Link href={authNavItems[0].href}>{authNavItems[0].label}</Link>}
-            />
-            <Button
-              size="sm"
-              render={<Link href={authNavItems[1].href}>{authNavItems[1].label}</Link>}
-            />
-          </div>
-        </div>
-      </Container>
+    <header className="site-header">
+      <Link className="brand-link" href="/" aria-label="GALACTIC home">
+        <Image src="/galactic-logo.png" alt="GALACTIC" width={794} height={410} priority className="brand-logo" />
+      </Link>
+      <nav className="header-nav" aria-label="Main navigation">
+        <Link className="nav-home" href="/">Home</Link>
+        <Link href="/#shop">Shop <span className="chevron">⌄</span></Link>
+        <Link className="nav-categories" href="/#shop">Categories <span className="chevron">⌄</span></Link>
+        <Link className="nav-about" href="/#about">About</Link>
+        <Link className="nav-contact" href="/#contact">Contact</Link>
+      </nav>
+      <div className="header-actions">
+        <Link href="/#shop" aria-label="Search the collection"><Search size={21} strokeWidth={1.8} /></Link>
+        <span className="action-divider" />
+        <Link href="/login" aria-label="Your account"><UserRound size={21} strokeWidth={1.8} /></Link>
+        <span className="action-divider" />
+        <Link href="/cart" className="bag-action" aria-label={`Shopping bag, ${count} items`}><ShoppingBag size={21} strokeWidth={1.8} /><span className="bag-count">{count}</span></Link>
+      </div>
     </header>
   );
 }

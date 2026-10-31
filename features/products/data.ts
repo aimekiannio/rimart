@@ -1,29 +1,15 @@
-export const products = [
-    {
-      id: 1,
-      name: "Local Rice 10kg",
-      price: 650,
-      category: "Groceries",
-      seller: "Mawlai Grocery Store",
-      location: "Shillong",
-      stock: "Available",
-    },
-    {
-      id: 2,
-      name: "Fresh Vegetables",
-      price: 120,
-      category: "Fresh Produce",
-      seller: "Police Bazaar Vendor",
-      location: "Shillong",
-      stock: "Available",
-    },
-    {
-      id: 3,
-      name: "Traditional Khasi Honey",
-      price: 400,
-      category: "Local Products",
-      seller: "Meghalaya Honey Farm",
-      location: "Shillong",
-      stock: "Limited",
-    },
-  ];
+export type Product = {
+  id: number;
+  name: string;
+  price: number;
+  category: "Clothing" | "Accessories" | "Electronics";
+  image: string;
+  badge: string;
+};
+
+export const products: Product[] = [
+  { id: 1, name: "GALACTIC Tee", price: 999, category: "Clothing", image: "/orbit-tee.png", badge: "New" },
+  { id: 2, name: "GALACTIC Hoodie", price: 1999, category: "Clothing", image: "/orbit-hoodie.png", badge: "Bestseller" },
+  { id: 3, name: "GALACTIC Cap", price: 799, category: "Accessories", image: "/orbit-cap.png", badge: "Hot" },
+  { id: 4, name: "GALACTIC Earbuds", price: 2499, category: "Electronics", image: "/orbit-earbuds.png", badge: "Trending" },
+];
