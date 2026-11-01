@@ -11,7 +11,7 @@ export function Navigation() {
   return (
     <header className="site-header">
       <Link className="brand-link" href="/" aria-label="GALACTIC home">
-        <Image src={assetPath("galactic-logo.png")} alt="GALACTIC" width={794} height={410} priority className="brand-logo" />
+        <Image src={assetPath("galactic-logo.svg")} alt="GALACTIC" width={874} height={430} priority className="brand-logo" />
       </Link>
       <nav className="header-nav" aria-label="Main navigation">
         <Link className="nav-home" href="/">Home</Link>

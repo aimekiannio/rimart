@@ -18,7 +18,7 @@ export default function HomePage() {
             <Link href="#shop" className="button button-dark">Explore store <span aria-hidden="true">→</span></Link>
           </div>
           <div className="hero-brand">
-            <Image src={assetPath("galactic-logo.png")} alt="GALACTIC" width={794} height={410} priority className="hero-logo" />
+            <Image src={assetPath("galactic-logo.svg")} alt="GALACTIC" width={874} height={430} priority className="hero-logo" />
             <p>FASHION <span>/</span> ACCESSORIES <span>/</span> ELECTRONICS</p>
           </div>
           <div className="hero-caption">GALACTIC // <br />SHOP SMARTER.<i /></div>
